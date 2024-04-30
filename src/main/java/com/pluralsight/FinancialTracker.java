@@ -51,7 +51,6 @@ public class FinancialTracker {
             }
         }
 
-        scanner.close();
     }
 
     public static void loadTransactions(String fileName) {
@@ -112,6 +111,7 @@ public class FinancialTracker {
             }
 
             amount = scanner.nextDouble();
+            scanner.nextLine();
 
         } while (amount <= 0);
 
@@ -132,7 +132,7 @@ public class FinancialTracker {
             System.err.println("Error writing transactions to file: " + e.getMessage());
 
         }
-        scanner.close();
+
     }
 
     // ✓This method should prompt the user to enter the date, time, vendor, and amount of a deposit.
@@ -170,6 +170,7 @@ public class FinancialTracker {
             }
 
             amount = scanner.nextDouble();
+            scanner.nextLine();
 
 
         } while (amount <= 0);
@@ -178,7 +179,7 @@ public class FinancialTracker {
         Transaction payment = new Transaction(date, time, description, vendor, amount);
         transactions.add(payment);
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("transactions.csv"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("transactions.csv",true))) {
             for (Transaction transaction : transactions) {
                 String formattedTransaction = String.format("%s|%s|%s|%s|-%.2f\n",
                         transaction.getDate(), transaction.getTime(),
@@ -191,7 +192,6 @@ public class FinancialTracker {
             System.err.println("Error writing transactions to file: " + e.getMessage());
 
         }
-        scanner.close();
     }
 
     //SUBTRACTING MONEY
