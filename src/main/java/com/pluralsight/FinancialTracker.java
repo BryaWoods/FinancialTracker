@@ -411,6 +411,9 @@ public class FinancialTracker {
         Double amount = amountStr.isEmpty() ? null : Double.parseDouble(amountStr);
 
         System.out.println("Search Results:");
+
+        LocalTime searchTime = LocalTime.now();
+
         boolean foundTransactions = false;
         for (Transaction transaction : transactions) {
             boolean matchesCriteria =
@@ -422,6 +425,7 @@ public class FinancialTracker {
 
             if (matchesCriteria) {
                 System.out.println("Date: " + transaction.getDate() +
+                        " | Time: " + transaction.getTime() +
                         " | Vendor: " + transaction.getVendor() +
                         " | Description: " + transaction.getDescription() +
                         " | Amount: " + transaction.getAmount());
@@ -431,6 +435,46 @@ public class FinancialTracker {
 
         if (!foundTransactions) {
             System.out.println("No transactions found matching the search criteria.");
+        }
+
+        writeToSearchLog(startDate, endDate, searchTime, description, vendor, amount, foundTransactions);
+
+    }
+
+    private static void writeToSearchLog(LocalDate startDate, LocalDate endDate, LocalTime searchTime, String description, String vendor, Double amount, boolean foundTransactions) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("search-log.csv", true))) {
+
+            writer.write("Search Time: " + searchTime + "\n");
+            writer.write("Search Criteria:\n");
+            writer.write("Start Date: " + startDate + "\n");
+            writer.write("End Date: " + endDate + "\n");
+            writer.write("Description: " + description + "\n");
+            writer.write("Vendor: " + vendor + "\n");
+            writer.write("Amount: " + amount + "\n");
+
+            writer.write("Search Results:\n");
+            if (foundTransactions) {
+                for (Transaction transaction : transactions) {
+                    boolean matchesCriteria =
+                            (startDate == null || transaction.getDate().isAfter(startDate)) &&
+                                    (endDate == null || transaction.getDate().isBefore(endDate)) &&
+                                    (description.isEmpty() || transaction.getDescription().equalsIgnoreCase(description)) &&
+                                    (vendor.isEmpty() || transaction.getVendor().equalsIgnoreCase(vendor)) &&
+                                    (amount == null || Double.compare(transaction.getAmount(), amount) == 0);
+
+                    if (matchesCriteria) {
+                        writer.write("Date: " + transaction.getDate() +
+                                " | Time: " + transaction.getTime() +
+                                " | Vendor: " + transaction.getVendor() +
+                                " | Description: " + transaction.getDescription() +
+                                " | Amount: " + transaction.getAmount() + "\n");
+                    }
+                }
+            } else {
+                writer.write("No transactions found matching the search criteria.\n");
+            }
+        } catch (IOException e) {
+            System.err.println("Error writing to search log file: " + e.getMessage());
         }
     }
 }
