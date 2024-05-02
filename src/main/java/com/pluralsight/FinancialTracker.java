@@ -49,6 +49,7 @@ public class FinancialTracker {
                     break;
             }
         }
+        scanner.close();
 
     }
 
@@ -117,9 +118,10 @@ public class FinancialTracker {
                         deposit.getDate(), deposit.getTime(),
                         deposit.getDescription(), deposit.getVendor(), deposit.getAmount());
                 writer.write(formattedDeposit);
-                //writer.newLine();
+                writer.newLine();
 
-            System.out.println("Thank you! Your deposit has been added.");
+            System.out.println("Thank you! Your deposit of " + deposit.getAmount() + " from " + deposit.getVendor() + " has been added successfully");
+            System.out.println(" ");
         } catch (IOException e) {
             System.err.println("Error writing transactions to file: " + e.getMessage());
 
@@ -166,6 +168,9 @@ public class FinancialTracker {
 
 
         Transaction payment = new Transaction(date, time, description, vendor, -amount);
+        //Notice the (-) in front of amount. That's what makes it a debit.
+        //I can then use this to differentiate between deposits and payments later on
+
         transactions.add(payment);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("transactions.csv",true))) {
@@ -174,9 +179,10 @@ public class FinancialTracker {
                         payment.getDate(), payment.getTime(),
                         payment.getDescription(), payment.getVendor(), payment.getAmount());
                 writer.write(formattedPayment);
-                //writer.newLine();
+                writer.newLine();
 
-            System.out.println("Thank you! Your payment has been added.");
+            System.out.println("Thank you! Your payment of " + payment.getAmount() + " to " + payment.getVendor() + " has been added successfully.");
+            System.out.println(" ");
         } catch (IOException e) {
             System.err.println("Error writing transactions to file: " + e.getMessage());
 
@@ -213,6 +219,8 @@ public class FinancialTracker {
                     break;
                 case "H":
                     running = false;
+                    break;
+
                 default:
                     System.out.println("Invalid option");
                     break;
@@ -221,6 +229,10 @@ public class FinancialTracker {
     }
 
     private static void displayLedger() {
+
+        //Lines like 231 are just for fun, you may remove them if you wish and are boring
+        //Also note my use of format and width specifiers
+
         System.out.println("                                    LEDGER                                            ");
         System.out.println("╡°˖✧✿✧˖°╞══✿══|°˖✧✿✧˖°╞══✿══╡°˖✧✿✧˖°╞══✿══|°˖✧✿✧˖°╞══✿══╡°˖✧✿✧˖°╞══✿══|°˖✧✿✧˖°╞══✿══╡");
         System.out.printf("| %-12s | %-12s | %-20s | %-15s | %-10s |\n",
@@ -244,7 +256,7 @@ public class FinancialTracker {
         System.out.println("╡°˖✧✿✧˖°╞══✿══|°˖✧✿✧˖°╞══✿══╡°˖✧✿✧˖°╞══✿══|°˖✧✿✧˖°╞══✿══╡°˖✧✿✧˖°╞══✿══|°˖✧✿✧˖°╞══✿══╡");
         System.out.printf("| %-12s | %-12s | %-20s | %-15s | %-10s |\n",
                 "Date", "Time", "Description", "Vendor", "Amount");
-        System.out.println(" °˖✧✿✧˖°        °˖✧✿✧˖°       °˖✧✿✧˖✿˖✧✿✧˖°         °˖✧✿✧˖°           °˖✧✿✧˖°        ");
+        System.out.println(" °˖✧✿✧˖°        °˖✧✿✧˖°        °˖✧✿✧˖✿˖✧✿✧˖°          °˖✧✿✧˖°           °˖✧✿✧˖°        ");
         for (Transaction deposit : transactions) {
             double amount = deposit.getAmount();
             if (amount > 0)
@@ -333,11 +345,13 @@ public class FinancialTracker {
 
                 case "6":
                     customSearch(scanner);
-
                     break;
+
                 case "0":
                     running = false;
-                default:
+                    break;
+
+                    default:
                     System.out.println("Invalid option");
                     break;
             }
@@ -421,7 +435,7 @@ public class FinancialTracker {
                             (endDate == null || transaction.getDate().isBefore(endDate)) &&
                             (description.isEmpty() || transaction.getDescription().equalsIgnoreCase(description)) &&
                             (vendor.isEmpty() || transaction.getVendor().equalsIgnoreCase(vendor)) &&
-                            (amount == null || Double.compare(transaction.getAmount(), amount) == 0);
+                            (amount == null || Math.abs(transaction.getAmount()) == Math.abs(amount));
 
             if (matchesCriteria) {
                 System.out.println("Date: " + transaction.getDate() +
@@ -441,26 +455,41 @@ public class FinancialTracker {
 
     }
 
-    private static void writeToSearchLog(LocalDate startDate, LocalDate endDate, LocalTime searchTime, String description, String vendor, Double amount, boolean foundTransactions) {
+    private static void writeToSearchLog(LocalDate startDate, LocalDate endDate, LocalTime searchTime,
+                                         String description, String vendor, Double amount, boolean foundTransactions) {
+
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("search-log.csv", true))) {
 
             writer.write("Search Time: " + searchTime + "\n");
             writer.write("Search Criteria:\n");
-            writer.write("Start Date: " + startDate + "\n");
-            writer.write("End Date: " + endDate + "\n");
-            writer.write("Description: " + description + "\n");
-            writer.write("Vendor: " + vendor + "\n");
-            writer.write("Amount: " + amount + "\n");
 
-            writer.write("Search Results:\n");
+            if (startDate != null) {
+                writer.write("Start Date: " + startDate + "\n");
+            }
+            if (endDate != null) {
+                writer.write("End Date: " + endDate + "\n");
+            }
+            if (description != null && !description.isEmpty()) {
+                writer.write("Description: " + description + "\n");
+            }
+            if (vendor != null && !vendor.isEmpty()) {
+                writer.write("Vendor: " + vendor + "\n");
+            }
+            if (amount != null) {
+                writer.write("Amount: " + amount + "\n");
+            }
+
+
             if (foundTransactions) {
+                writer.write("Search Results:\n");
                 for (Transaction transaction : transactions) {
                     boolean matchesCriteria =
                             (startDate == null || transaction.getDate().isAfter(startDate)) &&
                                     (endDate == null || transaction.getDate().isBefore(endDate)) &&
-                                    (description.isEmpty() || transaction.getDescription().equalsIgnoreCase(description)) &&
-                                    (vendor.isEmpty() || transaction.getVendor().equalsIgnoreCase(vendor)) &&
-                                    (amount == null || Double.compare(transaction.getAmount(), amount) == 0);
+                                    (description == null || description.isEmpty() || transaction.getDescription().equalsIgnoreCase(description)) &&
+                                    (vendor == null || vendor.isEmpty() || transaction.getVendor().equalsIgnoreCase(vendor)) &&
+                                    (amount == null || Math.abs(transaction.getAmount()) == Math.abs(amount));
 
                     if (matchesCriteria) {
                         writer.write("Date: " + transaction.getDate() +
@@ -473,10 +502,13 @@ public class FinancialTracker {
             } else {
                 writer.write("No transactions found matching the search criteria.\n");
             }
+            writer.write("\n");
+
         } catch (IOException e) {
             System.err.println("Error writing to search log file: " + e.getMessage());
         }
     }
+
 }
 
 

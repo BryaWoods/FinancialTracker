@@ -71,14 +71,14 @@ Follow these steps to get your application running within IntelliJ IDEA:
 
 ## Technologies Used
 
-- Java: Mention the version you are using.
+- Java: corretto 17
 - Any additional libraries or frameworks used in the project.
 
 ## Demo
 
 Include screenshots or GIFs that show your application in action. Use tools like [Giphy Capture](https://giphy.com/apps/giphycapture) to record a GIF of your application.
 
-![Application Screenshot](path/to/your/screenshot.png)
+![Application gif](/Users/bryannewoods/Documents/FinancialTrackerGif.gif)
 
 ## Future Work
 
@@ -96,13 +96,14 @@ List resources such as tutorials, articles, or documentation that helped you dur
 
 ## Team Members
 
-- **Aisha** - Specific contributions or roles.
-- **Pratick** - Specific contributions or roles.
-- **Ben** - Specific contributions or roles.
+- **Aisha** - 
+- **Pratick** - 
+- **Ben** - 
+- **Haby** -
 
 ## Thanks
 
 Express gratitude towards those who provided help, guidance, or resources:
 
-- Thank you to Raymound Maroun for continuous support and guidance.
+- Thank you to Raymond Maroun for continuous support and guidance.
 - A special thanks to all teammates for their dedication and teamwork.
