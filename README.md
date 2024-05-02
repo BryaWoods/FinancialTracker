@@ -76,16 +76,14 @@ Follow these steps to get your application running within IntelliJ IDEA:
 
 ## Demo
 
-Include screenshots or GIFs that show your application in action. Use tools like [Giphy Capture](https://giphy.com/apps/giphycapture) to record a GIF of your application.
+![FinancialTrackerGif.gif](..%2F..%2FFinancialTrackerGif.gif)
 
-![Application gif](/Users/bryannewoods/Documents/FinancialTrackerGif.gif)
 
 ## Future Work
 
-Outline potential future enhancements or functionalities you might consider adding:
 
-- Additional feature to be developed.
-- Improvement of current functionalities.
+- An option to total all payments or deposits from a certain date range.
+
 
 ## Resources
 
