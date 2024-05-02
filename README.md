@@ -76,7 +76,7 @@ Follow these steps to get your application running within IntelliJ IDEA:
 
 ## Demo
 
-![FinancialTrackerGif.gif](..%2F..%2FFinancialTrackerGif.gif)
+![FinancialTrackerGif.gif](https://github.com/BryaWoods/FinancialTracker/blob/master/FinancialTrackerGif.gif)
 
 
 ## Future Work
