@@ -36,7 +36,7 @@ Overall, this Java console application simplifies financial management for indiv
 and efficiency in tracking financial transactions.
 
 
-![Class Diagram](path/to/your/class_diagram.png)
+
 
 ## User Stories
 
